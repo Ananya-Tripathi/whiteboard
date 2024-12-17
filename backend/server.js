@@ -9,7 +9,16 @@ app.get("/", (req, res) => {
       "HEllo"
     );
   });
-  
+
+  io.on("connection", (socket) => {
+    console.log("connected")
+  socket.on("userJoined", (data) => {
+    const { name, userId, roomId, host, presenter } = data;
+    roomIdGlobal = roomId;
+    socket.join(roomId);
+    socket.emit("userIsJoined",{success:true})
+  })
+})
 const port = process.env.PORT || 5000;
 
 server.listen(port, () =>

@@ -1,20 +1,46 @@
-const CreateRoomForm = ({ uuid, socket, setUser, setMyPeer }) => {
-    return(
-        <form className="form col-md-12 mt-5">
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+const CreateRoomForm = ({ rId, socket, setUser, setMyPeer }) => {
+  const [roomId, setRoomId] = useState(rId());
+  const [name, setName] = useState("");
+  const navigate = useNavigate();
+
+  const handleCreateRoom = (e) => {
+    e.preventDefault();
+    const roomData = {
+      name,
+      roomId,
+      userId: rId,
+      host: true,
+      presenter: true,
+    };
+    if(roomData.name){
+    setUser(roomData);
+    navigate('/${roomId}')
+    socket.emit("userJoined", roomData)
+  }
+  else{
+    alert("Enter name")
+  }
+  }; 
+
+  
+  return (
+    <form className="form col-md-12 mt-5">
       <div className="form-group">
         <input
           type="text"
           className="form-control my-2"
           placeholder="Enter your name"
-        //   value={name}
-        //   onChange={(e) => setName(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
       </div>
       <div className="form-group border">
         <div className="input-group d-flex align-items-center jusitfy-content-center">
           <input
             type="text"
-            // value={roomId}
+            value={roomId}
             className="form-control my-2 border-0"
             disabled
             placeholder="Generate room code"
@@ -22,7 +48,7 @@ const CreateRoomForm = ({ uuid, socket, setUser, setMyPeer }) => {
           <div className="input-group-append">
             <button
               className="btn btn-primary btn-sm me-1"
-            //   onClick={() => setRoomId(uuid())}
+              onClick={() => setRoomId(rId())}
               type="button"
             >
               generate
@@ -38,12 +64,12 @@ const CreateRoomForm = ({ uuid, socket, setUser, setMyPeer }) => {
       </div>
       <button
         type="submit"
-        // onClick={handleCreateRoom}
+        onClick={handleCreateRoom}
         className="mt-4 btn-primary btn-block form-control"
       >
         Generate Room
       </button>
     </form>
-    );
-}
+  );
+};
 export default CreateRoomForm;

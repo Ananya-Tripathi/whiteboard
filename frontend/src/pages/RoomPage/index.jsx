@@ -1,8 +1,8 @@
 import { useState, useRef } from "react"
 import React from 'react'
 import WhiteBoard from "../../components/Whiteboard/index.jsx";
-
-const RoomPage = () => {
+import { useParams } from "react-router-dom";
+const RoomPage = ({user,socket}) => {
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
 
@@ -10,9 +10,6 @@ const RoomPage = () => {
     const [color, setColor] = useState("black");
     const [elements, setElements] = useState([]);
     const [history, setHistory] = useState([]);
-    const [openedUserTab, setOpenedUserTab] = useState(false);
-    const [openedChatTab, setOpenedChatTab] = useState(false);
-    const [stream, setStream] = useState(null);
     const handleClearCanvas = () => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
@@ -20,7 +17,23 @@ const RoomPage = () => {
         ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
         setElements([]);
       };
-
+      const undo = () => {
+        setHistory((prevHistory) => [
+          ...prevHistory,
+          elements[elements.length - 1],
+        ]);
+        setElements((prevElements) =>
+          prevElements.slice(0, prevElements.length - 1)
+        );
+      };
+    
+      const redo = () => {
+        setElements((prevElements) => [
+          ...prevElements,
+          history[history.length - 1],
+        ]);
+        setHistory((prevHistory) => prevHistory.slice(0, prevHistory.length - 1));
+      };
     return (
     <>
     <h1 className="text-center py-4">
@@ -79,13 +92,30 @@ const RoomPage = () => {
         </div>
         </div>
         <div className="col-md-3 d-flex gap-2">
-         
-        </div>
+            <button
+              className="btn btn-primary mt-1"
+              disabled={elements.length === 0}
+              onClick={() => undo()}
+            >
+              Undo
+            </button>
+            <button
+              className="btn btn-outline-primary mt-1"
+              disabled={history.length < 1}
+              onClick={() => redo()}
+            >
+              Redo
+            </button>
+          </div>
+    
+       {user.presenter && (
         <div className="col-md-2">
         <button className="btn btn-danger" onClick={handleClearCanvas}>
             Clear Canvas
         </button>
         </div>
+       )}
+       
     </div>
     <div className="col-md-10 mx-auto mt-4 canvas-box">
         <WhiteBoard
@@ -96,6 +126,8 @@ const RoomPage = () => {
             tool={tool}
             color={color}
             handleClearCanvas={handleClearCanvas}
+            user={user}
+            socket={socket}
         />
     </div>
     </>

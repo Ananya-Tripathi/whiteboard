@@ -1,7 +1,7 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import Forms from "./components/Forms/index.jsx";
-import { Route,Routes } from "react-router-dom";
+import { Route,Routes, useParams } from "react-router-dom";
 import RoomPage from "./pages/RoomPage/index.jsx";
 
 import io from "socket.io-client";
@@ -9,6 +9,7 @@ import io from "socket.io-client";
 const App = () => {
   const [user, setUser] = useState(null);
   // const [users, setUsers] = useState([]); 
+  
   const [peers, setPeers] = useState({});
   const [myPeer, setMyPeer] = useState(null);
   
@@ -34,13 +35,18 @@ const App = () => {
   useEffect(()=>{
     socket.on("userIsJoined", (data) => {
       if (data.success) {
-        console.log("userJoined");
+        console.log("userJoined",data.users);
         setUser(data.users);
       } else {
         console.log("userJoined error");
       }
     });
-  })
+    console.log(user,"app")
+    // socket.on("drawing", (data) => {
+    //   const { roomId, drawingData } = data;
+    //   socket.to(roomId).emit("updateCanvas", drawingData);
+    // });
+  },[])
 
 
 
@@ -48,7 +54,7 @@ const App = () => {
     <div className="container">
       <Routes>
         <Route path="/" element={<Forms rId = {uuid} socket={socket} setUser={setUser}/>}/>
-        <Route path="/:roomId" element={<RoomPage/>}/>
+        {user && (<Route path="/:roomId" element={<RoomPage user={user} socket={socket}/>}/>)}
       </Routes>
     </div>
   );

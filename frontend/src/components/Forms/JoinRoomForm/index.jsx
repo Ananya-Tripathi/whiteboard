@@ -13,12 +13,13 @@ const JoinRoomForm = ({ rId, socket, setUser }) => {
       name,
       roomId,
       userId: rId,
-      host: true,
-      presenter: true,
+      host: false,
+      presenter: false,
       };
-    if(roomId && name){
+    if(roomData.roomId && roomData.name){
       setUser(roomData);
-      navigate('/${roomId}')
+      navigate(`/${rId}`)
+      
       socket.emit("userJoined", roomData)
     }
     else{

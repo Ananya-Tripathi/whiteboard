@@ -12,10 +12,9 @@ const WhiteBoard = ({canvasRef, ctxRef, elements, setElements, tool, color,user,
     useEffect(() => {
       socket.on("whiteBoardDataResponse", (data) => {
         setImg(data.imgURL);
-        console.log("data",data)
-        console.log("data",img)
+        console.log("Received imgURL from server:", data.imgURL);
       });
-      // socket.off("whiteBoardDataResponse")
+      socket.off("whiteBoardDataResponse")
     }, [socket]);
     if (!user?.presenter) {
       return (
@@ -112,7 +111,8 @@ const WhiteBoard = ({canvasRef, ctxRef, elements, setElements, tool, color,user,
             }
           });
           const canvasImage = canvasRef.current.toDataURL();
-          socket.emit("whiteboardData", {canvasImage:canvasImage, elements:elements});
+          socket.emit("whiteboardData", {canvasImage:canvasImage, elements:elements, roomId:user.roomId});
+          console.log("emitting data")
           
     },[elements])
 

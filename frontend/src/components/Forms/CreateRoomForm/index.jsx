@@ -52,12 +52,7 @@ const CreateRoomForm = ({ rId, socket, setUser, setMyPeer }) => {
             >
               generate
             </button>
-            <button
-              className="btn btn-outline-danger btn-sm me-2"
-              type="button"
-            >
-              copy
-            </button>
+        
           </div>
         </div>
       </div>

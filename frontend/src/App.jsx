@@ -45,10 +45,10 @@ const App = () => {
     socket.on("users",(data)=>{
       setUsers(data)
     })
-    // socket.on("drawing", (data) => {
-    //   const { roomId, drawingData } = data;
-    //   socket.to(roomId).emit("updateCanvas", drawingData);
-    // });
+    socket.on("drawing", (data) => {
+      const { roomId, drawingData } = data;
+      socket.to(roomId).emit("updateCanvas", drawingData);
+    });
   },[])
 
 

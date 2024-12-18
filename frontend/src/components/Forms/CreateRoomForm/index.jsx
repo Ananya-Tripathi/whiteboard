@@ -10,7 +10,6 @@ const CreateRoomForm = ({ rId, socket, setUser, setMyPeer }) => {
     const roomData = {
       name,
       roomId,
-      userId: rId,
       host: true,
       presenter: true,
     };

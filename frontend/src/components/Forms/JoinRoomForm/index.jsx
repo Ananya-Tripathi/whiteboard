@@ -18,7 +18,7 @@ const JoinRoomForm = ({ rId, socket, setUser }) => {
       };
     if(roomData.roomId && roomData.name){
       setUser(roomData);
-      navigate(`/${rId}`)
+      navigate(`/${roomData.roomId}`)
       
       socket.emit("userJoined", roomData)
     }

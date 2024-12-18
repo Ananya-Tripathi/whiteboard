@@ -8,7 +8,7 @@ import io from "socket.io-client";
 
 const App = () => {
   const [user, setUser] = useState(null);
-  // const [users, setUsers] = useState([]); 
+  const [users, setUsers] = useState([]); 
   
   const [peers, setPeers] = useState({});
   const [myPeer, setMyPeer] = useState(null);
@@ -35,13 +35,16 @@ const App = () => {
   useEffect(()=>{
     socket.on("userIsJoined", (data) => {
       if (data.success) {
+        setUsers(data.users)
         console.log("userJoined",data.users);
-        setUser(data.users);
       } else {
         console.log("userJoined error");
       }
     });
     console.log(user,"app")
+    socket.on("users",(data)=>{
+      setUsers(data)
+    })
     // socket.on("drawing", (data) => {
     //   const { roomId, drawingData } = data;
     //   socket.to(roomId).emit("updateCanvas", drawingData);
@@ -54,7 +57,7 @@ const App = () => {
     <div className="container">
       <Routes>
         <Route path="/" element={<Forms rId = {uuid} socket={socket} setUser={setUser}/>}/>
-        {user && (<Route path="/:roomId" element={<RoomPage user={user} socket={socket}/>}/>)}
+        {user && (<Route path="/:roomId" element={<RoomPage user={user} socket={socket} users={users}/>}/>)}
       </Routes>
     </div>
   );

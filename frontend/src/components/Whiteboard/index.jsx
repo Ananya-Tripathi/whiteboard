@@ -1,6 +1,6 @@
 import { useEffect, useState, useLayoutEffect } from "react";
 import rough from "roughjs";
-import { Socket } from "socket.io-client";
+// import { Socket } from "socket.io-client";
 
 const roughGenerator = rough.generator();
 
@@ -15,6 +15,7 @@ const WhiteBoard = ({canvasRef, ctxRef, elements, setElements, tool, color,user,
         console.log("data",data)
         console.log("data",img)
       });
+      // socket.off("whiteBoardDataResponse")
     }, [socket]);
     if (!user?.presenter) {
       return (
@@ -111,7 +112,7 @@ const WhiteBoard = ({canvasRef, ctxRef, elements, setElements, tool, color,user,
             }
           });
           const canvasImage = canvasRef.current.toDataURL();
-          socket.emit("whiteboardData", canvasImage);
+          socket.emit("whiteboardData", {canvasImage:canvasImage, elements:elements});
           
     },[elements])
 

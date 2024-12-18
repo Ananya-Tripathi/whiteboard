@@ -16,7 +16,7 @@ const CreateRoomForm = ({ rId, socket, setUser, setMyPeer }) => {
     };
     if(roomData.name){
     setUser(roomData);
-    navigate('/${roomId}')
+    navigate(`/${roomId}`)
     socket.emit("userJoined", roomData)
   }
   else{

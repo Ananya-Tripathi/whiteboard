@@ -3,27 +3,30 @@ const app = express();
 
 const server = require("http").createServer(app);
 const { Server } = require("socket.io");
+const { addUser } = require("./utils/user");
 const io = new Server(server);
 app.get("/", (req, res) => {
     res.send(
       "HEllo"
     );
   });
-  let roomIdGlobal, imgURLGlobal
+  let roomIdGlobal, imgURLGlobal, elements
   io.on("connection", (socket) => {
     console.log("connected")
     socket.on("userJoined", (data) => {
       const { name, userId, roomId, host, presenter } = data;
       roomIdGlobal = roomId;
       socket.join(roomId);
-      const users = {
-        name:data.name,
-        userId:data.userId,
-        roomId:data.roomId,
-        host:data.host,
-        presenter:data.presenter,
-      }
+      // const users = {
+      //   name:data.name,
+      //   userId:data.userId,
+      //   roomId:data.roomId,
+      //   host:data.host,
+      //   presenter:data.presenter,
+      // }
+      const users = addUser(data);
       socket.emit("userIsJoined", { success: true, users });
+      socket.broadcast.to(roomId).emit("users",users)
       socket.broadcast.to(roomId).emit("whiteBoardDataResponse",{
         imgURL: imgURLGlobal
       })
@@ -34,9 +37,11 @@ app.get("/", (req, res) => {
       socket.to(roomId).emit("drawing", newElement); 
     });
     socket.on("whiteboardData", (data) => {
-      imgURLGlobal = data;
+      imgURLGlobal = data.canvasImage;
+      elements = data.elements
       socket.broadcast.to(roomIdGlobal).emit("whiteBoardDataResponse", {
-        imgURL: data,
+        imgURL: imgURLGlobal,
+        elements: elements
       });
     }); 
 })

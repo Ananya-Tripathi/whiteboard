@@ -25,12 +25,13 @@ A web-based collaborative whiteboard application built with **React**, **Tailwin
 ### Steps
 1. Clone the repository:
    ```
-      git clone <repository-url>
+   git clone <repository-url>
    cd collaborative-whiteboard
    ```
 
 2. Install dependencies:
-   ```cd frontend
+   ```
+   cd frontend
    npm install
    cd backend
    npm install
@@ -39,10 +40,9 @@ A web-based collaborative whiteboard application built with **React**, **Tailwin
 3. Configure environment variables:
    Create a `.env` file in the root directory and set the following variables:
    ```
-   PORT=5000
-   DATABASE_URL=your_database_url
-   SOCKET_PORT=5001
+   APP_PASSWORD = <your password>
    ```
+   change server details to your Postgres server details and port
 
 4. Start the server:
    ```
